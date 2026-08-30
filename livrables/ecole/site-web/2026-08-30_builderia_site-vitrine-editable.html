@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Builderia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: #0B1220; color: #F7F4EE; font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: #5EC8E8; text-decoration: none; }
+  a:hover { color: #F2A93B; }
+  input { font-family: 'Inter', sans-serif; }
+  input::placeholder { color: #626B7A; }
+
+  .mono { font-family: 'JetBrains Mono', monospace; }
+  .display { font-family: 'Space Grotesk', sans-serif; }
+
+  /* Header */
+  header {
+    position: sticky; top: 0; z-index: 50;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    padding: 14px clamp(16px,5vw,64px);
+    background: rgba(11,18,32,0.88); backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(94,200,232,0.18);
+  }
+  .logo { display: flex; align-items: center; gap: 12px; }
+  .logo svg { filter: drop-shadow(0 0 10px rgba(94,200,232,0.45)); }
+  .logo span { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 25px; letter-spacing: -0.02em; }
+  .logo .accent { color: #5EC8E8; }
+  .btn-header {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.04em;
+    background: #F2A93B; color: #0B1220; padding: 11px 18px; border-radius: 3px;
+    white-space: nowrap; font-weight: 500;
+  }
+
+  /* Hero */
+  .hero {
+    position: relative; padding: clamp(64px,11vw,132px) clamp(20px,6vw,64px) clamp(56px,8vw,96px);
+    border-bottom: 1px solid rgba(94,200,232,0.18);
+    background-image: linear-gradient(rgba(94,200,232,0.13) 1px, transparent 1px), linear-gradient(90deg, rgba(94,200,232,0.13) 1px, transparent 1px);
+    background-size: 48px 48px; overflow: hidden;
+  }
+  .hero-inner { max-width: 1240px; margin: 0 auto; }
+  .eyebrow {
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: #5EC8E8; margin-bottom: 24px;
+  }
+  .eyebrow .rule { width: 18px; height: 1px; background: #5EC8E8; display: inline-block; }
+  h1 {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 600; letter-spacing: -0.025em;
+    font-size: clamp(36px,6.4vw,82px); line-height: 1.02; max-width: 17ch;
+  }
+  .hero-sub { margin: 28px 0 0; max-width: 56ch; font-size: clamp(16px,2vw,19px); line-height: 1.65; color: #8A93A6; }
+  .hero-cta-row { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 24px; margin-top: 40px; }
+  .btn-primary {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px;
+    background: #F2A93B; color: #0B1220; padding: 18px 32px; border-radius: 3px; border: none; cursor: pointer;
+  }
+  .hero-note { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #626B7A; }
+  .hero-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(190px,1fr)); gap: 24px;
+    margin-top: clamp(48px,7vw,80px); padding-top: 32px; border-top: 1px solid rgba(94,200,232,0.18);
+  }
+  .hero-grid div { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #626B7A; line-height: 1.6; }
+  .hero-grid b { display: block; color: #5EC8E8; font-size: 13px; margin-bottom: 5px; font-weight: 500; }
+
+  /* Section headers reused */
+  section { padding: clamp(56px,8vw,104px) clamp(20px,6vw,64px); border-bottom: 1px solid rgba(94,200,232,0.18); }
+  .section-inner { max-width: 1240px; margin: 0 auto; }
+  h2 {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 600; letter-spacing: -0.02em;
+    font-size: clamp(26px,3.6vw,40px); line-height: 1.12; margin: 0 0 44px;
+  }
+
+  /* Problème */
+  .problem-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px,1fr)); gap: 1px; background: rgba(94,200,232,0.18); border: 1px solid rgba(94,200,232,0.18); }
+  .problem-card { background: #0B1220; padding: 32px 28px; }
+  .problem-card .num { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #F2A93B; margin-bottom: 14px; }
+  .problem-card h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 20px; margin: 0 0 12px; letter-spacing: -0.01em; }
+  .problem-card p { margin: 0; font-size: 15px; line-height: 1.65; color: #8A93A6; }
+
+  /* Offres */
+  #offres { background: #F7F4EE; color: #0B1220; }
+  #offres .eyebrow { color: #2E5A6B; }
+  #offres .eyebrow .rule { background: #2E5A6B; }
+  .offres-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px,1fr)); gap: 1px; background: rgba(11,18,32,0.12); border: 1px solid rgba(11,18,32,0.12); }
+  .offre-card { background: #F7F4EE; padding: 36px 30px; display: flex; flex-direction: column; gap: 18px; min-height: 290px; }
+  .offre-tag { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.12em; color: #8A93A6; text-transform: uppercase; }
+  .offre-tag.highlight { color: #F2A93B; }
+  .offre-card h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 23px; letter-spacing: -0.015em; }
+  .offre-card p { margin: 0; font-size: 15px; line-height: 1.65; color: #626B7A; }
+  .offre-link { margin-top: auto; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #0B1220; border-bottom: 1px solid #F2A93B; align-self: flex-start; padding-bottom: 2px; }
+
+  /* Comment ça marche */
+  .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap: 28px; }
+  .step { border-top: 2px solid rgba(94,200,232,0.45); padding-top: 24px; }
+  .step.first { border-top-color: #F2A93B; }
+  .step .tag { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #5EC8E8; margin-bottom: 14px; }
+  .step.first .tag { color: #F2A93B; }
+  .step h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 22px; margin: 0 0 12px; letter-spacing: -0.015em; }
+  .step p { margin: 0; font-size: 15px; line-height: 1.7; color: #8A93A6; }
+  .steps-note { margin: 36px 0 0; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #626B7A; }
+
+  /* Concrètement (cas d'usage) */
+  #confiance { background: #121B2E; }
+  #confiance h2 { max-width: 26ch; }
+  .trust-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap: 1px; background: rgba(94,200,232,0.18); border: 1px solid rgba(94,200,232,0.18); }
+  .trust-card { background: #121B2E; border: none; padding: 32px 28px; min-height: 200px; display: flex; flex-direction: column; gap: 14px; }
+  .usecase-tag { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #F2A93B; }
+  .trust-card.usecase h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 19px; line-height: 1.25; letter-spacing: -0.01em; color: #F7F4EE; }
+  .trust-card p { margin: 0; font-size: 15px; line-height: 1.65; color: #8A93A6; }
+
+  /* CTA / audit */
+  #audit {
+    padding: clamp(56px,8vw,112px) clamp(20px,6vw,64px);
+    background-image: linear-gradient(rgba(94,200,232,0.13) 1px, transparent 1px), linear-gradient(90deg, rgba(94,200,232,0.13) 1px, transparent 1px);
+    background-size: 48px 48px; border-bottom: none;
+  }
+  .audit-inner { max-width: 900px; margin: 0 auto; text-align: center; }
+  .audit-eyebrow { display: flex; align-items: center; justify-content: center; gap: 14px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: #F2A93B; margin-bottom: 28px; }
+  .audit-eyebrow .rule { width: 38px; height: 1px; background: rgba(242,169,59,0.5); }
+  #audit h2 { font-size: clamp(30px,5vw,58px); line-height: 1.06; margin: 0 auto; max-width: 20ch; letter-spacing: -0.03em; }
+  .audit-sub { margin: 26px auto 0; max-width: 56ch; font-size: 17px; line-height: 1.75; color: #8A93A6; }
+  .audit-steps { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px 40px; margin-top: 36px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #8A93A6; }
+  .audit-steps span b { color: #F2A93B; margin-right: 10px; }
+
+  #audit-form { margin-top: 40px; display: grid; grid-template-columns: repeat(auto-fit, minmax(230px,1fr)); gap: 16px; align-items: start; }
+  #audit-form input {
+    background: #121B2E; border: 1px solid rgba(94,200,232,0.28); color: #F7F4EE; font-size: 16px;
+    padding: 16px; border-radius: 3px; width: 100%; min-height: 52px; outline: none;
+  }
+  #audit-form input:focus { border-color: #5EC8E8; }
+  #audit-form button {
+    grid-column: 1 / -1; font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px;
+    background: #F2A93B; color: #0B1220; border: none; padding: 19px 32px; border-radius: 3px; cursor: pointer; min-height: 56px;
+  }
+  #audit-form button:hover { background: #F7BC5C; }
+
+  #audit-success { display: none; margin-top: 40px; border: 1px solid #F2A93B; padding: 36px 32px; background: rgba(242,169,59,0.06); }
+  #audit-success .title { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 24px; letter-spacing: -0.015em; }
+  #audit-success p { margin: 12px 0 0; font-size: 15px; color: #8A93A6; line-height: 1.7; }
+
+  .audit-legal { margin: 16px 0 0; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #8A93A6; line-height: 1.7; }
+  .audit-contact { margin-top: 48px; padding-top: 28px; border-top: 1px solid rgba(94,200,232,0.18); display: flex; flex-wrap: wrap; justify-content: center; gap: 14px 44px; font-size: 15px; color: #8A93A6; }
+  .audit-contact a { display: flex; align-items: center; gap: 10px; }
+
+  /* Footer */
+  footer {
+    padding: 44px clamp(20px,6vw,64px); border-top: 1px solid rgba(94,200,232,0.18);
+    display: flex; flex-wrap: wrap; gap: 28px 48px; justify-content: space-between; align-items: flex-start;
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #626B7A; line-height: 1.9;
+  }
+  footer .foot-logo { display: flex; align-items: center; gap: 10px; }
+  footer .foot-logo span { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 16px; color: #F7F4EE; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <svg width="34" height="34" viewBox="0 0 24 24" fill="none"><path d="M4 4H14V8H8V14H4V4Z" fill="#5EC8E8"/><circle cx="17" cy="17" r="2.5" fill="#F2A93B"/></svg>
+    <span>Builder<span class="accent">IA</span></span>
+  </div>
+  <a href="#audit" class="btn-header">Audit gratuit →</a>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="eyebrow"><span class="rule"></span>PME · artisans · bâtiment &amp; services</div>
+    <h1>L'IA au service de votre entreprise,<span class="accent" style="color:#5EC8E8;"> pas l'inverse.</span></h1>
+    <p class="hero-sub">Nous identifions, dans votre activité, les heures perdues chaque semaine sur des tâches répétitives — puis nous les supprimons. Sans jargon, sans usine à gaz.</p>
+    <div class="hero-cta-row">
+      <a href="#audit" class="btn-primary">Réserver mon audit gratuit</a>
+      <span class="hero-note">Gratuit · sans engagement · 30 minutes</span>
+    </div>
+    <div class="hero-grid">
+      <div><b>01 — AUDIT</b>diagnostic de votre activité</div>
+      <div><b>02 — SITE INTERNET</b>pensé pour vous amener des clients</div>
+      <div><b>03 — AGENT IA</b>un assistant qui répond pour vous</div>
+      <div><b>04 — AUTOMATISATION</b>fini la double saisie</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="section-inner">
+    <div class="eyebrow"><span class="rule"></span>Le constat</div>
+    <h2>Ce n'est pas votre métier qui vous prend du temps.</h2>
+    <div class="problem-grid">
+      <div class="problem-card">
+        <div class="num">— 01</div>
+        <h3>Des heures de devis, relances et paperasse</h3>
+        <p>Chaque semaine, les mêmes tâches recommencent. Le soir, le week-end. Ce temps n'est facturé à personne.</p>
+      </div>
+      <div class="problem-card">
+        <div class="num">— 02</div>
+        <h3>Des demandes de clients sans réponse</h3>
+        <p>Un appel manqué sur le chantier, un mail répondu trois jours plus tard : le chantier part chez le concurrent.</p>
+      </div>
+      <div class="problem-card">
+        <div class="num">— 03</div>
+        <h3>Vos concurrents ont déjà commencé</h3>
+        <p>Ceux qui automatisent répondent plus vite, chiffrent plus vite, signent plus. L'écart se creuse tranquillement.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="offres">
+  <div class="section-inner">
+    <div class="eyebrow"><span class="rule"></span>Ce que nous faisons</div>
+    <h2>Quatre leviers. Un seul point d'entrée.</h2>
+    <div class="offres-grid">
+      <div class="offre-card">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#2E5A6B" stroke-width="1.4"><circle cx="12" cy="12" r="8"/><path d="M12 8V12L14.5 14.5"/></svg>
+        <div class="offre-tag highlight">Point de départ · gratuit</div>
+        <h3>Audit</h3>
+        <p>Nous passons votre activité en revue et repartons avec la liste de ce qui peut être automatisé, chiffré en heures gagnées.</p>
+        <a href="#audit" class="offre-link">Réserver mon audit →</a>
+      </div>
+      <div class="offre-card">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#2E5A6B" stroke-width="1.4"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="M3 9H21"/><circle cx="6" cy="7" r="0.6" fill="#2E5A6B" stroke="none"/></svg>
+        <div class="offre-tag">02</div>
+        <h3>Site internet</h3>
+        <p>Un site fait pour qu'on vous appelle, pas pour exister. Chaque page mène à une demande de devis.</p>
+      </div>
+      <div class="offre-card">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#2E5A6B" stroke-width="1.4"><rect x="6" y="6" width="12" height="12" rx="2"/><circle cx="10" cy="11" r="1" fill="#2E5A6B" stroke="none"/><circle cx="14" cy="11" r="1" fill="#2E5A6B" stroke="none"/><path d="M9 15H15"/></svg>
+        <div class="offre-tag">03</div>
+        <h3>Agent IA</h3>
+        <p>Un assistant qui répond à vos clients, qualifie les demandes et prend les rendez-vous pendant que vous êtes sur le chantier.</p>
+      </div>
+      <div class="offre-card">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#2E5A6B" stroke-width="1.4"><path d="M4 12H9L11 7L14 17L16 12H20"/></svg>
+        <div class="offre-tag">04</div>
+        <h3>Automatisation</h3>
+        <p>Devis, factures, relances, planning : vos outils se parlent enfin. Le temps gagné est mesuré, pas promis.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="section-inner">
+    <div class="eyebrow"><span class="rule"></span>Comment ça marche</div>
+    <h2>Trois étapes, et rien à signer avant la troisième.</h2>
+    <div class="steps-grid">
+      <div class="step first">
+        <div class="tag">ÉTAPE 01 · 30 MIN</div>
+        <h3>L'audit gratuit</h3>
+        <p>On vous appelle, vous racontez votre semaine type. Vous n'avez rien à préparer.</p>
+      </div>
+      <div class="step">
+        <div class="tag">ÉTAPE 02 · 48 H</div>
+        <h3>Les recommandations</h3>
+        <p>Un document simple : ce qu'on peut automatiser, le temps gagné, le coût. Il est à vous, même si on s'arrête là.</p>
+      </div>
+      <div class="step">
+        <div class="tag">ÉTAPE 03</div>
+        <h3>La mise en œuvre</h3>
+        <p>Si vous décidez d'avancer, on installe, on forme votre équipe et on reste joignables.</p>
+      </div>
+    </div>
+    <p class="steps-note">Aucun engagement à l'étape 01 ni à l'étape 02.</p>
+  </div>
+</section>
+
+<section id="confiance">
+  <div class="section-inner">
+    <div class="eyebrow"><span class="rule"></span>Concrètement, ça donne quoi</div>
+    <h2>Quatre automatisations qui changent le quotidien d'une TPE du bâtiment.</h2>
+    <div class="trust-grid">
+      <div class="trust-card usecase">
+        <div class="usecase-tag">Agent IA</div>
+        <h3>L'accueil qui ne rate jamais un appel</h3>
+        <p>Sur le chantier, impossible de décrocher. L'agent répond à votre place, qualifie la demande et propose un créneau — le client n'attend pas jusqu'au soir.</p>
+      </div>
+      <div class="trust-card usecase">
+        <div class="usecase-tag">Automatisation</div>
+        <h3>La relance de devis qu'on n'a jamais le temps de faire</h3>
+        <p>Un devis envoyé sans réponse sous 5 jours déclenche un rappel automatique, au bon moment, sans que vous ayez à y penser.</p>
+      </div>
+      <div class="trust-card usecase">
+        <div class="usecase-tag">Automatisation</div>
+        <h3>La facture qui part toute seule</h3>
+        <p>Un devis signé se transforme en facture, envoyée et suivie automatiquement — avec relance polie en cas de retard de paiement.</p>
+      </div>
+      <div class="trust-card usecase">
+        <div class="usecase-tag">Agent IA</div>
+        <h3>Les avis et messages centralisés</h3>
+        <p>Google, Facebook, SMS, mail : tout arrive au même endroit, et les questions courantes trouvent une réponse en quelques secondes.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="audit">
+  <div class="audit-inner">
+    <div class="audit-eyebrow"><span class="rule"></span>Premier échange<span class="rule"></span></div>
+    <h2>Trente minutes pour savoir si l'IA a<span style="color:#5EC8E8;"> sa place chez vous</span></h2>
+    <p class="audit-sub">Pas de présentation commerciale : vous décrivez votre quotidien, nous vous disons honnêtement ce qui peut être automatisé, ce qui ne peut pas l'être, et ce que ça représente.</p>
+    <div class="audit-steps">
+      <span><b>01</b>Trente minutes au téléphone</span>
+      <span><b>02</b>Un état des lieux écrit</span>
+      <span><b>03</b>Vous décidez de la suite</span>
+    </div>
+
+    <form id="audit-form">
+      <input type="text" name="nom" required placeholder="Nom et prénom">
+      <input type="text" name="entreprise" placeholder="Entreprise">
+      <input type="email" name="email" required placeholder="Email">
+      <input type="tel" name="telephone" required placeholder="Téléphone">
+      <button type="submit">Réserver mon audit gratuit</button>
+    </form>
+
+    <div id="audit-success">
+      <div class="title">Demande enregistrée.</div>
+      <p id="audit-success-text">Merci — on vous rappelle sous 24 h ouvrées. Si c'est urgent : <a href="tel:+33600000000">06 00 00 00 00</a>.</p>
+    </div>
+
+    <p class="audit-legal">Gratuit, sans engagement, 30 minutes. Vos coordonnées servent uniquement à vous rappeler.</p>
+
+    <div class="audit-contact">
+      <a href="mailto:contact@builderia.fr">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5EC8E8" stroke-width="1.5"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="M3 7L12 13L21 7"/></svg>
+        contact@builderia.fr
+      </a>
+      <a href="tel:+33600000000">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5EC8E8" stroke-width="1.5"><path d="M6 3H9L11 8L8.5 9.5C9.5 12 12 14.5 14.5 15.5L16 13L21 15V18C21 19.5 20 20.5 18.5 20.5C11 20 4 13 3.5 5.5C3.5 4 4.5 3 6 3Z"/></svg>
+        06 00 00 00 00
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-logo">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 4H14V8H8V14H4V4Z" fill="#5EC8E8"/><circle cx="17" cy="17" r="2.5" fill="#F2A93B"/></svg>
+    <span>Builder<span style="color:#5EC8E8;">IA</span></span>
+  </div>
+  <div>CONTACT<br><a href="mailto:contact@builderia.fr">contact@builderia.fr</a><br><a href="tel:+33600000000">06 00 00 00 00</a></div>
+  <div>OÙ<br>Marseille · à distance<br>Lun — Ven, 8h — 19h</div>
+  <div>LÉGAL<br><a href="#">Mentions légales</a><br><a href="#">Politique de confidentialité</a><br>SIREN — à compléter</div>
+  <div style="align-self:flex-end;">© BUILDERIA 2026</div>
+</footer>
+
+<script>
+  document.getElementById('audit-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var nom = this.querySelector('input[name="nom"]').value.trim();
+    var successText = document.getElementById('audit-success-text');
+    successText.innerHTML = 'Merci ' + (nom || '') + ' — on vous rappelle sous 24 h ouvrées. Si c\'est urgent : <a href="tel:+33600000000">06 00 00 00 00</a>.';
+    this.style.display = 'none';
+    document.getElementById('audit-success').style.display = 'block';
+  });
+</script>
+
+</body>
+</html>
